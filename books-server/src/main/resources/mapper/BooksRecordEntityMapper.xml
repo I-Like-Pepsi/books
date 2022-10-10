@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.buydeem.booksserver.mapper.BooksRecordEntityMapper">
+
+    <resultMap id="booksRecordResultMap" type="com.buydeem.booksserver.entity.BooksRecordEntity">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="user_id" property="userId"/>
+        <result column="amount" property="amount"/>
+        <result column="income_flag" property="incomeFlag"/>
+        <result column="remark" property="remark"/>
+        <result column="record_type_id" property="recordTypeId"/>
+        <result column="delete_flag" property="deleteFlag"/>
+        <association property="recordType" javaType="com.buydeem.booksserver.entity.RecordTypeEntity">
+            <id column="record_type_id" property="id"/>
+            <result column="type_name" property="typeName"/>
+            <result column="icon" property="icon"/>
+            <result column="delete_flag" property="deleteFlag"/>
+        </association>
+    </resultMap>
+
+    <select id="queryListForPage" resultMap="booksRecordResultMap">
+        SELECT
+        t1.*,
+        t2.type_name,
+        t2.icon,
+        t2.delete_flag
+        FROM t_books_record t1
+        LEFT JOIN t_record_type t2 ON t1.record_type_id = t2.id
+        <where>
+            <if test="query.userId != null">
+                t1.user_id = #{query.userId}
+            </if>
+            <if test="query.startDate != null">
+                DATE(t1.create_time) >= #{query.startDate}
+            </if>
+            <if test="query.endDate != null">
+                DATE(t1.create_time)  <![CDATA[ <= ]]> #{query.endDate}
+            </if>
+            <if test="query.incomeFlag != null">
+                t1.income_flag = #{query.incomeFlag}
+            </if>
+            <if test="query.recordType != null">
+                t1.recordType = #{query.recordType}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+</mapper>
+

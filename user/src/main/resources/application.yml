@@ -1,0 +1,14 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: user-server
+  datasource:
+    url: 'jdbc:mysql://127.0.0.1:3306/books?serverTimezone=GMT%2B8&characterEncoding=UTF-8&autoReconnect=true&useSSL=false'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.0.101:8848
